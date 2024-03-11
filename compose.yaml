@@ -22,7 +22,7 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
       PMA_HOST: mysql
-      PMA_USER: ${MYSQL_USER:-group3}
+      PMA_USER: ${MYSQL_USER:-group10}
       PMA_PASSWORD: ${MYSQL_PASSWORD:-mysqlpassword}
       PMA_ARBITRARY: 1
     ports:
