@@ -1,21 +1,39 @@
-version: '3'
+version: '3.5'
 
 services:
-  db:
-    image: mysql:latest
-    restart: always
+  mysql:
+    container_name: mysql_container
+    image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: group10
-      MYSQL_DATABASE: Northwind
-      MYSQL_USER: user
-      MYSQL_PASSWORD: group10
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-group10password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-NorthwindDB}
+      MYSQL_USER: ${MYSQL_USER:-group10}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-group10password}
+    volumes:
+       - mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql
+    restart: unless-stopped
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    ports:
-      - 8080:80
+    container_name: phpmyadmin_container
+    image: phpmyadmin/phpmyadmin
     environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: group10password
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER:-group3}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-mysqlpassword}
+      PMA_ARBITRARY: 1
+    ports:
+      - "${PHPMYADMIN_PORT:-8080}:80"
+    networks:
+      - mysql
+    restart: unless-stopped
+
+networks:
+  mysql:
+    driver: bridge
+
+volumes:
+    mysql:
